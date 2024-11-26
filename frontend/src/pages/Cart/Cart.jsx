@@ -1,0 +1,77 @@
+import React, { useContext } from 'react'
+import './Cart.css'
+import { StoreContext } from '../../context/storecontext';
+import { useNavigate } from 'react-router-dom';
+
+
+const Cart = () => {
+
+  const {cartitems,food_list,removefromcart,gettotalcartAmount}=useContext(StoreContext);
+  const navigate=useNavigate();
+
+
+  return (
+    <div className='cart'>
+      <div className="cart-items">
+        <div className="cart-items-title">
+          <p>Items</p>
+          <p>Title</p>
+          <p>Price</p>
+          <p>Qunatity</p>
+          <p>Total</p>
+          <p>Remove</p>
+        </div>
+        <br />
+        <hr />
+        {food_list.map((item,index)=>{
+
+          if(cartitems[item._id]>0)
+            {
+            return(
+              <div>
+              <div key={index} className="cart-items-title cart-items-item">
+                <img src={item.image} alt="" />
+                <p>{item.name}</p>
+                <p>${item.price}</p>
+                <p>{cartitems[item._id]}</p>
+                <p>${item.price*cartitems[item._id]}</p>
+                <p onClick={()=>removefromcart(item._id)} className='cross'>x</p>
+              </div>
+            <hr />
+            </div>
+            )
+          }
+        })}
+      </div>
+      <div className="cart-buttom">
+        <div className="cart-total">
+          <h2>Cart Total</h2>
+          <div className="cart-total-details">
+            <p>Subtotal</p>
+            <p>${gettotalcartAmount()}</p>
+          </div>
+          <div className="cart-total-details">
+            <p>Delivery Fee</p>
+            <p>${gettotalcartAmount()===0?0:2}</p>
+          </div>
+          <div className="cart-total-details">
+            <p>Total</p>
+            <p>${gettotalcartAmount()===0?0:gettotalcartAmount()+2}</p>
+          </div>
+        <button onClick={()=>navigate('/order')}>Proceed To Checkout</button>
+        </div>
+      </div>
+      <div className="cart-promocode">
+        <div>
+          <p>If you have a promocode, Enter it here</p>
+          <div className='cart-promocode-input'>
+              <input type="text" placeholder='promo code' />
+              <button>Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default Cart
